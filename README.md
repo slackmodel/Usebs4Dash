@@ -3,4 +3,6 @@
 * app.R 을 Rstudio에서 실행
  
 ## 참고한 사이트들
-https://github.com/hyunyulhenry/jkpfactors
+* https://github.com/hyunyulhenry/jkpfactors
+* https://www.vim.org/ 
+* https://github.com/naver/d2codingfont
