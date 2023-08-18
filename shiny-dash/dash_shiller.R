@@ -1,13 +1,13 @@
 # dash_shiller.R
 
-siller_MENU <- function() {
+shiller_MENU <- function() {
   tagList(
     menuItem(
-      text = "Item List 1",
-      icon = icon("bars"),
+      text = "Shiller",
+      # icon = icon("bars"),
       startExpanded = TRUE,
       menuSubItem(
-        text = "Item 1",
+        text = "Shiller 1",
         tabName = "tab1",
         icon = icon("table")
       ),
@@ -20,15 +20,17 @@ siller_MENU <- function() {
   )
 }
 
-siller_UI <- function(id) {
+shiller_UI <- function(id) {
   ns <- NS(id)
   tagList(
-    box(
-      solidHeader = FALSE,
-      title = "siller 1",
-      background = NULL,
-      width = 12,
-      status = "primary",
+    dash_box(
+      12,
+      "▣ 1. ",
+      pre("http://www.econ.yale.edu/~shiller/data.htm")
+    ),
+    dash_box(
+      12,
+      "▣ 2. ",
       plotOutput("distPlot")
     )
   )
@@ -51,7 +53,7 @@ siller_UI <- function(id) {
   # )
 }
 
-siller_SV <- function(id) {
+shiller_SV <- function(id) {
   moduleServer(
     id,
     function(input, output, session) {
