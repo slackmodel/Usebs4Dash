@@ -3,6 +3,7 @@ library(bs4Dash)
 library(thematic)
 library(waiter)
 library(shinyWidgets)
+library(DT)
 
 thematic_shiny()
 

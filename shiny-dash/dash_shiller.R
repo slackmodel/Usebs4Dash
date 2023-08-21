@@ -31,7 +31,8 @@ shiller_UI <- function(id) {
     dash_box(
       12,
       "▣ 2. ",
-      plotOutput("distPlot")
+      actionBttn(ns("btn1"), "조회"),
+      DTOutput(ns("dt1"))
     )
   )
   # shiny::tagList(
@@ -57,6 +58,41 @@ shiller_SV <- function(id) {
   moduleServer(
     id,
     function(input, output, session) {
+      
+      # re1 ----
+      re1 <- eventReactive(list(input$btn1), {
+        message("re1")
+        ie_data <- read_excel("ie_data.xls", sheet = "Data", skip = 7)
+        ie_data <- ie_data %>% mutate(Date = format(Date, nsmall = 2))
+      })
+
+      output$dt1 <- renderDT({
+        dt1 <- re1()
+        # datatable(
+        #   iris,
+        #   extensions = "Buttons", options = list(
+        #     dom = "Bfrtip",
+        #     buttons = c("copy", "csv", "excel", "pdf", "print")
+        #   )
+        # )
+        DT::datatable(dt1,
+          extensions = c("Buttons", "Scroller"),
+            selection = "none",
+          options = list(
+            # dom = "Bt",
+            dom = 'Bfrtip',
+            autoWidth = TRUE,
+            paging = FALSE,
+            scrollX = TRUE,
+            scrollY = "250px",
+            buttons = c('copy', 'csv', 'excel', 'pdf', 'print')
+            
+          )
+        ) %>%
+          DT::formatStyle(names(dt1), lineHeight = "20%") %>% 
+          # DT::formatDate("Date", method = "toLocaleDateString") %>% 
+          DT::formatRound(2:length(dt1), digits = 2)
+      })
       # count <- reactiveVal(0)
       #
       # observeEvent(input$button, {
