@@ -12,10 +12,25 @@ source("dash_shiller.R")
 
 # ui ----
 ui <- dashboardPage(
-  fullscreen = TRUE,
-  header = dashboardHeader(skin = "dark", fixed = FALSE, compact = TRUE,
-                           title = "DASH"),
-  footer = bs4DashFooter(),
+  fullscreen = FALSE,
+  # preloader = list(html = tagList(spin_1(), "Loading ..."), color = "#343a40"),
+  help = FALSE,
+  # scrollToTop = TRUE,
+  header = dashboardHeader(
+    fixed = TRUE,
+    leftUi = NULL,
+    rightUi = NULL,
+    title = dashboardBrand(
+      title = "dashboard",
+      color = "primary",
+      # href = "https://adminlte.io/themes/v3",
+      # image = "https://adminlte.io/themes/v3/dist/img/AdminLTELogo.png"
+    )
+  ),
+  # header = dashboardHeader(
+  #   skin = "dark", fixed = TRUE, compact = TRUE, title = "DASH"
+  # ),
+  # footer = bs4DashFooter(),
   controlbar = NULL,
   # controlbar = dashboardControlbar(
   #   skin = "light",
@@ -29,16 +44,18 @@ ui <- dashboardPage(
   # ),
   sidebar = bs4DashSidebar(
     skin = "light",
+    width = "200px",
     inputId = "sidebarState",
-    collapsed = TRUE,
+    collapsed = FALSE,
     minified = FALSE,
-    expandOnHover = TRUE,
-    fixed = TRUE,
+    expandOnHover = FALSE,
+    fixed = FALSE,
+    startExpanded = TRUE,
     sidebarMenu(
       id = "sidebar",
-      compact = FALSE,
+      compact = TRUE,
       childIndent = TRUE,
-      legacy = TRUE,
+      legacy = FALSE,
       shiller_MENU()
     )
   ),

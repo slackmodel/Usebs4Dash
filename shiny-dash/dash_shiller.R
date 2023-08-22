@@ -25,12 +25,12 @@ shiller_UI <- function(id) {
   tagList(
     dash_box(
       12,
-      "▣ 1. ",
+      "▣ CAPE Ratio source",
       pre("http://www.econ.yale.edu/~shiller/data.htm")
     ),
     dash_box(
       12,
-      "▣ 2. ",
+      "▣ CAPE Ratio ",
       actionBttn(ns("btn1"), "조회"),
       DTOutput(ns("dt1"))
     )
@@ -63,7 +63,7 @@ shiller_SV <- function(id) {
       re1 <- eventReactive(list(input$btn1), {
         message("re1")
         ie_data <- read_excel("ie_data.xls", sheet = "Data", skip = 7)
-        ie_data <- ie_data %>% mutate(Date = format(Date, nsmall = 2))
+        ie_data %<>% mutate(Date = format(Date, nsmall = 2)) %>% arrange(desc(Date))
       })
 
       output$dt1 <- renderDT({
