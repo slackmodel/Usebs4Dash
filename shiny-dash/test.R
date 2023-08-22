@@ -15,10 +15,6 @@ rsconnect::setAccountInfo(
   secret = "<SECRET>"
 )
 
-rsconnect::setAccountInfo(name='slackmodel',
-                          token='0D45860810696C5D8CA57636F9853330',
-                          secret='tkknif5FVbotFfRHlETDgFnoek4gepypVLXjpbMT')
-  
 
 library(rsconnect)
 rsconnect::deployApp(".")
