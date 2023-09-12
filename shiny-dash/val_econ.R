@@ -35,6 +35,23 @@ ie_data %<>% rename(
 )
 
 ie_data %>% DT::datatable()
+
+dt1 <- ie_data 
+ DT::datatable( dt1,
+              extensions = c("Buttons", "Scroller"),
+              selection = "none",
+              options = list(
+                # dom = "Bt",
+                dom = "Bfrtip",
+                autoWidth = TRUE,
+                paging = TRUE,
+                scrollX = TRUE,
+                scrollY = "250px",
+                buttons = c("copy", "csv", "excel", "pdf", "print")
+              )
+ )
+              
+              
 dt1 %>% DT::datatable()
 zoo::yearmon()
 

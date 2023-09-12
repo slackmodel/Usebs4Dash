@@ -7,7 +7,7 @@ econ_MENU <- function() {
       # icon = icon("bars"),
       startExpanded = TRUE,
       menuSubItem(
-        text = "Shiller ",
+        text = "Shiller - CAPE",
         tabName = "tab1",
         icon = icon("table")
       ),

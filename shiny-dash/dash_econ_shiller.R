@@ -76,7 +76,7 @@ econ_shiller_SV <- function() {
             # dom = "Bt",
             dom = "Bfrtip",
             autoWidth = TRUE,
-            paging = FALSE,
+            paging = TRUE,
             scrollX = TRUE,
             scrollY = "250px",
             buttons = c("copy", "csv", "excel", "pdf", "print")
