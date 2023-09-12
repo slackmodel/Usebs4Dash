@@ -4,33 +4,65 @@ library(thematic)
 library(waiter)
 library(shinyWidgets)
 library(DT)
+library(plotly)
 
 thematic_shiny()
 
-source("dash_lib.R")
-source("dash_shiller.R")
+source("app_lib.R")
+source("dash_econ.R")
 
-# ui ----
+# UI ----
+ui_style <- function() {
+  tags$head(tags$style("
+    "))
+}
+
+ui_sidebar <- function() {
+  bs4DashSidebar(
+    skin = "light",
+    # width = "200px",
+    inputId = "sidebar",
+    collapsed = FALSE,
+    minified = FALSE,
+    expandOnHover = TRUE,
+    fixed = TRUE,
+    startExpanded = TRUE,
+    sidebarMenu(
+      id = "sidebar",
+      compact = TRUE,
+      childIndent = TRUE,
+      legacy = FALSE,
+      econ_MENU()
+    )
+  )
+}
+
+ui_body <- function() {
+  dashboardBody(
+    ui_style(),
+    # div(class = "tab-content", function())
+    tabItems(
+      tabItem(tabName = "tab1", econ_shiller_UI())
+      # tabItem(tabName = "tab1", econ_csi("econ_csi"))
+      # tabItem(tabName = "tab2", econ_UI("econ"))
+    )
+  )
+}
+
+# SERVER ----
+server <- function(input, output, session) {
+  econ_shiller_SV()
+}
+
 ui <- dashboardPage(
+  help = NULL,
   fullscreen = FALSE,
   # preloader = list(html = tagList(spin_1(), "Loading ..."), color = "#343a40"),
-  help = FALSE,
   # scrollToTop = TRUE,
   header = dashboardHeader(
-    fixed = TRUE,
-    leftUi = NULL,
-    rightUi = NULL,
-    title = dashboardBrand(
-      title = "dashboard",
-      color = "primary",
-      # href = "https://adminlte.io/themes/v3",
-      # image = "https://adminlte.io/themes/v3/dist/img/AdminLTELogo.png"
-    )
+    skin = "dark", fixed = FALSE, compact = TRUE, title = "DASH"
   ),
-  # header = dashboardHeader(
-  #   skin = "dark", fixed = TRUE, compact = TRUE, title = "DASH"
-  # ),
-  # footer = bs4DashFooter(),
+  footer = bs4DashFooter(),
   controlbar = NULL,
   # controlbar = dashboardControlbar(
   #   skin = "light",
@@ -42,32 +74,9 @@ ui <- dashboardPage(
   #     value = 2
   #   )
   # ),
-  sidebar = bs4DashSidebar(
-    skin = "light",
-    width = "200px",
-    inputId = "sidebarState",
-    collapsed = FALSE,
-    minified = FALSE,
-    expandOnHover = FALSE,
-    fixed = FALSE,
-    startExpanded = TRUE,
-    sidebarMenu(
-      id = "sidebar",
-      compact = TRUE,
-      childIndent = TRUE,
-      legacy = FALSE,
-      shiller_MENU()
-    )
-  ),
-  body = dashboardBody(
-    tabItems(
-      tabItem(tabName = "tab1", shiller_UI("shiller"))
-    )
-  ),
+  sidebar = ui_sidebar(),
+  body = ui_body(),
 )
 
-server <- function(input, output, session) {
-  shiller_SV("shiller")
-}
 
 shinyApp(ui, server)

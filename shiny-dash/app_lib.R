@@ -4,6 +4,12 @@ library(lubridate)
 library(xts)
 library(tidyverse)
 library(magrittr)
+library(glue)
+
+dt_table<- function() {
+  
+  
+}
 
 dash_box <- function(width = 12, title= NULL, ...) {
     box(
