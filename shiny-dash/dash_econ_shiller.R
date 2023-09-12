@@ -63,7 +63,8 @@ econ_shiller_SV <- function() {
         {
           fun_econ_shiller()
         },
-        ignoreInit = TRUE
+        # ignoreInit = TRUE
+        ignoreInit =FALSE 
       )
 
       output$dt1 <- renderDT({
