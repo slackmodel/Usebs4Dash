@@ -5,6 +5,9 @@ library(xts)
 library(tidyverse)
 library(magrittr)
 
+setwd(glue::glue(rstudioapi::getActiveProject(), "/shiny-dash"))
+download.file(url = "http://www.econ.yale.edu/~shiller/data/ie_data.xls", destfile = "ie_data.xls", mode = "wb")
+
 ie_data <- read_excel("ie_data.xls", sheet = "Data", skip = 7)
 ie_data %<>%
   filter(!is.na(Date)) %>%

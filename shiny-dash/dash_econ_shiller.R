@@ -15,6 +15,7 @@ econ_shiller_UI <- function() {
       12,
       "▣ CAPE Ratio ",
       actionBttn(ns("btn1"), "show data", color = "primary", style = "bordered"),
+      actionBttn(ns("btn2"), "update data", color = "primary", style = "bordered"),
       plotlyOutput(ns("pl1")),
       hr(),
       br(),
@@ -58,6 +59,14 @@ econ_shiller_SV <- function() {
   moduleServer(
     "econ_shiller",
     function(input, output, session) {
+      observeEvent(input$btn2, {
+        download.file(url = "http://www.econ.yale.edu/~shiller/data/ie_data.xls",
+                      destfile = "ie_data.xls",
+                      mode = "wb")
+        
+        
+      })
+      
       # re1 ----
       re1 <- eventReactive(list(input$btn1),
         {
@@ -101,7 +110,38 @@ econ_shiller_SV <- function() {
           add_trace(y = ~`TR CAPE`, type = "scatter", mode = "lines", name = "TR CAPE") %>%
           add_trace(ie_data, x = ~Date, y = ~`S&P Comp. P`, type = "scatter", mode = "lines", name = "S&P", yaxis = "y2") %>%
           layout(
-            xaxis = list(),
+            # legend =list(orientation = 'h'),
+            xaxis = list(
+                rangeslider = list(type = "date"),
+                rangeselector = list(
+                  buttons = list(
+                    list(
+                      count = 3,
+                      label = "3 yr",
+                      step = "year",
+                      stepmode = "backward"),
+                    list(
+                      count = 6,
+                      label = "6 yr",
+                      step = "year",
+                      stepmode = "backward"),
+                    list(
+                      count = 10,
+                      label = "10 yr",
+                      step = "year",
+                      stepmode = "backward"),
+                    list(
+                      count = 20,
+                      label = "20 yr",
+                      step = "year",
+                      stepmode = "backward"),
+                    list(
+                      count = 1,
+                      label = "YTD",
+                      step = "year",
+                      stepmode = "todate"),
+                    list(step = "all")))
+            ),
             yaxis = list(
               nticks = 6,
               tickvals = c(0, 10, 20, 30, 40, 50)
