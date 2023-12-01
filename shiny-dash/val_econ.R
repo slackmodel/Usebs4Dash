@@ -5,78 +5,48 @@ library(xts)
 library(tidyverse)
 library(magrittr)
 
+
+# csi bok ----
+remotes::install_github("opensdmx/rsdmx")
+library(rsdmx)
+library(ecos)
+
+ecos.setKey("your_api_key")
+
+
+read_csv( "소비자동향조사(전국, 월, 2008.9~)_20002158.csv")
+
+getwd()
+
+read_excel("./data/소비자동향조사(전국, 월, 2008.9~)_28003114.xlsx", sheet = "데이터", skip = 6) 
+read_csv("data/101_DT_1C8015.csv", locale = locale(encoding = "cp949")) %>% select(1:3)
+
+
+
+
+# shiller  ---- 
 setwd(glue::glue(rstudioapi::getActiveProject(), "/shiny-dash"))
 download.file(url = "http://www.econ.yale.edu/~shiller/data/ie_data.xls", destfile = "ie_data.xls", mode = "wb")
 
-ie_data <- read_excel("ie_data.xls", sheet = "Data", skip = 7)
-ie_data %<>%
-  filter(!is.na(Date)) %>%
-  select_if(negate(is_logical)) %>%
-  # mutate(Date = ym(as.character(Date)))
-  mutate(Date = format(Date, nsmall = 2))
 
-ie_data %<>% rename(
-  "S&P Comp. P" = 2,
-  "Dividend D" = 3,
-  "Earnings E" = 4,
-  "CPI" = 5,
-  "Date Fraction" = 6,
-  "Long Interest Rate GS10" = 7,
-  "Real Price" = 8,
-  "Real Dividend" = 9,
-  "Real Total Return Price" = 10,
-  "Real Earnings" = 11,
-  "Real TR Scaled Earnings" = 12,
-  "CAPE" = 13,
-  "TR CAPE" = 14,
-  "Excess CAPE Yield" = 15,
-  "Monthly Total Bond Returns" = 16,
-  "Real Total Bond Returns" = 17,
-  "10 Year Annualized Stock Real Return" = 18,
-  "10 Year Annualized Bonds Real Return" = 19,
-  "Real 10 Year Excess Annualized Returns" = 20
-)
 
-ie_data %>% DT::datatable()
+library(rsdmx)
+dsd <- readSDMX(file = "./data/511Y002/511Y002_dsd.xml", isURL = FALSE)
 
-dt1 <- ie_data 
- DT::datatable( dt1,
-              extensions = c("Buttons", "Scroller"),
-              selection = "none",
-              options = list(
-                # dom = "Bt",
-                dom = "Bfrtip",
-                autoWidth = TRUE,
-                paging = TRUE,
-                scrollX = TRUE,
-                scrollY = "250px",
-                buttons = c("copy", "csv", "excel", "pdf", "print")
-              )
- )
-              
-              
-dt1 %>% DT::datatable()
-zoo::yearmon()
+cls <- slot(dsd, "codelists")
+codelists <- sapply(slot(cls, "codelists"), function(x) slot(x, "id"))
+codelist <- as.data.frame(slot(dsd, "codelists"), codelistId = "G00024") 
 
-ie_data %>% filter(Date == "     NA")
+concepts <- as.data.frame(slot(dsd, "concepts"))
 
-library(plotly)
 
-ay <- list(
-  tickfont = list(color = "red"),
-  overlaying = "y",
-  side = "right",
-  title = "<b>S&P comp.</b>")
+dataset <- readSDMX(file = "./data/511Y002/511Y002generic.xml", isURL = FALSE, dsd =TRUE) 
+as.data.frame(dataset, labels = TRUE) %>% head() %>% as_tibble()
+as.data.frame(dataset, labels = TRUE) %>% head() 
+as.data.frame(dataset) %>% head() 
 
-ie_data %<>% mutate(Date = ym(Date))
-plot_ly(ie_data, x = ~Date, y = ~CAPE, type = "scatter", mode = "lines", name = "CAPE") %>%
-  add_trace(y = ~`TR CAPE`, type = "scatter", mode = "lines", name = "TR CAPE") %>%
-  add_trace(ie_data, x = ~Date,  y = ~`S&P Comp. P`, type = "scatter", mode = "lines", name = "S&P", yaxis = "y2") %>% 
-  layout(
-    xaxis = list(),
-    yaxis = list(
-      nticks = 6,
-      tickvals = c(0, 10, 20, 30, 40, 50)
-    ),
-    yaxis2 = ay
-  )
+tmp <- system.file("extdata","Example_Eurostat_2.0.xml", package="rsdmx")
+sdmx <- readSDMX(tmp, isURL = FALSE)
+stats <- as.data.frame(sdmx)
+head(stats)
+

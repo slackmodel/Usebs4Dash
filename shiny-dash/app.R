@@ -42,8 +42,9 @@ ui_body <- function() {
     ui_style(),
     # div(class = "tab-content", function())
     tabItems(
-      tabItem(tabName = "tab1", econ_shiller_UI())
-      # tabItem(tabName = "tab1", econ_csi("econ_csi"))
+      tabItem(tabName = "tab1", econ_shiller_UI()),
+      tabItem(tabName = "tab2", econ_csi_UI()),
+      tabItem(tabName = "tab3", econ_cycle_UI())
       # tabItem(tabName = "tab2", econ_UI("econ"))
     )
   )
@@ -52,6 +53,8 @@ ui_body <- function() {
 # SERVER ----
 server <- function(input, output, session) {
   econ_shiller_SV()
+  econ_csi_SV()
+  econ_cycle_SV()
 }
 
 ui <- dashboardPage(

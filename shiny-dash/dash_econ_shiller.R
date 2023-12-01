@@ -13,7 +13,7 @@ econ_shiller_UI <- function() {
     ),
     dash_box(
       12,
-      "▣ CAPE Ratio ",
+      "▣ CSI ",
       actionBttn(ns("btn1"), "show data", color = "primary", style = "bordered"),
       actionBttn(ns("btn2"), "update data", color = "primary", style = "bordered"),
       plotlyOutput(ns("pl1")),
@@ -60,42 +60,57 @@ econ_shiller_SV <- function() {
     "econ_shiller",
     function(input, output, session) {
       observeEvent(input$btn2, {
-        download.file(url = "http://www.econ.yale.edu/~shiller/data/ie_data.xls",
-                      destfile = "ie_data.xls",
-                      mode = "wb")
-        
-        
+        download.file(
+          url = "http://www.econ.yale.edu/~shiller/data/ie_data.xls",
+          destfile = "ie_data.xls",
+          mode = "wb"
+        )
+
+        show_alert(
+          title = "Success !!",
+          text = paste(
+            "shiller data 업데이트 완료.\n",
+            "http://www.econ.yale.edu/~shiller/data/ie_data.xls"
+          ),
+          type = "info",
+          width = "40%"
+        )
       })
-      
+
       # re1 ----
       re1 <- eventReactive(list(input$btn1),
         {
           fun_econ_shiller()
         },
         # ignoreInit = TRUE
-        ignoreInit =FALSE 
+        ignoreInit = FALSE
       )
 
+      # dt1 ----
       output$dt1 <- renderDT({
         dt1 <- re1()
-        DT::datatable(dt1,
-          extensions = c("Buttons", "Scroller"),
-          selection = "none",
-          options = list(
-            # dom = "Bt",
-            dom = "Bfrtip",
-            autoWidth = TRUE,
-            paging = TRUE,
-            scrollX = TRUE,
-            scrollY = "250px",
-            buttons = c("copy", "csv", "excel", "pdf", "print")
-          )
-        ) %>%
+
+        dt1 %>%
+          select(Date, CAPE, `TR CAPE`, everything()) %>%
+          DT::datatable(
+            extensions = c("Buttons", "Scroller"),
+            selection = "none",
+            options = list(
+              # dom = "Bt",
+              dom = "Bfrtip",
+              autoWidth = TRUE,
+              paging = TRUE,
+              scrollX = TRUE,
+              scrollY = "250px",
+              buttons = c("copy", "csv", "excel", "pdf", "print")
+            )
+          ) %>%
           DT::formatStyle(names(dt1), lineHeight = "20%") %>%
           # DT::formatDate("Date", method = "toLocaleDateString") %>%
           DT::formatRound(2:length(dt1), digits = 2)
       })
 
+      # pl1 ----
       output$pl1 <- renderPlotly({
         ie_data <- re1()
         ay <- list(
@@ -112,35 +127,42 @@ econ_shiller_SV <- function() {
           layout(
             # legend =list(orientation = 'h'),
             xaxis = list(
-                rangeslider = list(type = "date"),
-                rangeselector = list(
-                  buttons = list(
-                    list(
-                      count = 3,
-                      label = "3 yr",
-                      step = "year",
-                      stepmode = "backward"),
-                    list(
-                      count = 6,
-                      label = "6 yr",
-                      step = "year",
-                      stepmode = "backward"),
-                    list(
-                      count = 10,
-                      label = "10 yr",
-                      step = "year",
-                      stepmode = "backward"),
-                    list(
-                      count = 20,
-                      label = "20 yr",
-                      step = "year",
-                      stepmode = "backward"),
-                    list(
-                      count = 1,
-                      label = "YTD",
-                      step = "year",
-                      stepmode = "todate"),
-                    list(step = "all")))
+              rangeslider = list(type = "date"),
+              rangeselector = list(
+                buttons = list(
+                  list(
+                    count = 3,
+                    label = "3 yr",
+                    step = "year",
+                    stepmode = "backward"
+                  ),
+                  list(
+                    count = 6,
+                    label = "6 yr",
+                    step = "year",
+                    stepmode = "backward"
+                  ),
+                  list(
+                    count = 10,
+                    label = "10 yr",
+                    step = "year",
+                    stepmode = "backward"
+                  ),
+                  list(
+                    count = 20,
+                    label = "20 yr",
+                    step = "year",
+                    stepmode = "backward"
+                  ),
+                  list(
+                    count = 1,
+                    label = "YTD",
+                    step = "year",
+                    stepmode = "todate"
+                  ),
+                  list(step = "all")
+                )
+              )
             ),
             yaxis = list(
               nticks = 6,

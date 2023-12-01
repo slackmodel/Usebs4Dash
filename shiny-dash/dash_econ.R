@@ -18,7 +18,7 @@ econ_MENU <- function() {
       ),
       menuSubItem(
         text = "경기 순환변동치",
-        tabName = "tab2",
+        tabName = "tab3",
         icon = icon("table")
       )
     ),
@@ -27,3 +27,4 @@ econ_MENU <- function() {
 
 source("dash_econ_shiller.R")
 source("dash_econ_csi.R")
+source("dash_econ_cycle.R")
